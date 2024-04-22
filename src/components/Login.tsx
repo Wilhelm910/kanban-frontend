@@ -7,9 +7,14 @@ type LoginData = {
   password: string
 }
 
+const initialLoginData: LoginData = {
+  username: "",
+  password: ""
+}
+
 
 export default function Login() {
-  const [loginData, setLoginData] = useState<LoginData | null>(null)
+  const [loginData, setLoginData] = useState<LoginData>(initialLoginData)
   const navigate = useNavigate();
 
 
