@@ -1,6 +1,6 @@
 import { Box, Button, MenuItem, TextField } from '@mui/material'
 import { useEffect, useState } from 'react'
-import { TaskItem, TaskProps } from '../utils/types'
+import { TaskItem } from '../utils/types'
 
 
 const status = [
@@ -29,7 +29,8 @@ const initialNewTask: TaskItem = {
     user: "",
     created_at: new Date().toISOString().split('T')[0],
     checked: false,
-    status: null
+    status: null,
+    id: ""
 }
 
 type AllUsersProps = {
@@ -44,7 +45,7 @@ const initialAllUsers: AllUsersProps[] = [{
 
 type OpenProps = {
     handleClose: () => void
-    item: TaskItem
+    item?: TaskItem
 }
 
 export default function NewTask({ handleClose, item }: OpenProps) {
@@ -57,13 +58,22 @@ export default function NewTask({ handleClose, item }: OpenProps) {
             [e.target.name]: e.target.value
         }))
     }
+  
+    useEffect(() => {
+        if (item) {
+            setNewTask(item)
+        }
+    },[])
+    console.log(newTask)
+
+    const URL = item ? `http://127.0.0.1:8000/updateTask/${item.id}/` : "http://127.0.0.1:8000/createTask/"
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         console.log(newTask)
         try {
-            const response = await fetch(`http://127.0.0.1:8000/createTask/`, {
-                method: "POST",
+            const response = await fetch(URL, {
+                method: `${item ? "PUT" : "POST"}`,
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": `Token ${localStorage.getItem("token")}`
@@ -72,12 +82,13 @@ export default function NewTask({ handleClose, item }: OpenProps) {
             })
             if (response.ok) {
                 const data = await response.json();
-                console.log("Task erfolgreich erstellt:", data);
+                console.log(item ? "Task erfolgreich aktualisiert" : "Task erfolgreich erstellt:", data);
                 setNewTask(initialNewTask)
                 handleClose()
 
             } else {
-                console.error("Fehler beim Erstellen des Tasks:", response.statusText);
+                console.error(item ? "Fehler beim aktualisieren des Tasks" : "Fehler beim Erstellen des Tasks:", response.statusText);
+                console.log("Url", URL)
             }
         } catch (error) {
             console.log("error")
@@ -103,6 +114,7 @@ export default function NewTask({ handleClose, item }: OpenProps) {
         }
         loadAllUsers()
     }, [])
+    console.log(allUsers)
 
 
     return (
@@ -121,7 +133,7 @@ export default function NewTask({ handleClose, item }: OpenProps) {
                             <MenuItem key={item.value} value={item.value}>{item.label}</MenuItem>
                         ))}
                     </TextField>
-                    <Button type="submit" variant="contained">Create Task</Button>
+                    <Button type="submit" variant="contained">{item ? "Update Task" : "Create Task"}</Button>
                 </Box>
             </form>
         </>
