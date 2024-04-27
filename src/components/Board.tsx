@@ -3,16 +3,7 @@ import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom";
 import NewTask from "./NewTask";
 import Task from "./Task";
-
-
-type NewTaskProps = {
-    title: string
-    description: string
-    user: string
-    created_at: string
-    checked: boolean
-    status: "todo" | "doing" | "review" | "done" | null
-}
+import { TaskItem } from "../utils/types";
 
 type StatusBoxProps = {
     status: 'todo' | 'doing' | 'review' | 'done';
@@ -23,7 +14,7 @@ type StatusBoxProps = {
 
 export default function Board() {
 
-    const [tasks, setTasks] = useState<NewTaskProps[]>([])
+    const [tasks, setTasks] = useState<TaskItem[]>([])
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
@@ -66,19 +57,16 @@ export default function Board() {
                 console.error("An error occured", error)
             }
         }
-
         loadTasks()
     }, [])
-    console.log(tasks)
-
 
     const StatusBox = ({ bgcolor, status, children }: StatusBoxProps) => {
         return (
-            <Box sx={{ bgcolor, flex: "1", padding: 1, display: "flex", flexDirection: "column", alignItems: "center" }}>
+            <Box sx={{ width: "100%", bgcolor, flex: "1", padding: 1, display: "flex", flexDirection: "column", alignItems: "center" }}>
                 <Typography>{children}</Typography>
                 {tasks.map((item) => {
                     return (
-                        item.status == status && <Box mb={1}><Task item={item} /></Box>
+                        item.status == status && <Task key={item.id} item={item} />
                     )
                 })}
             </Box>
@@ -88,7 +76,7 @@ export default function Board() {
 
     return (
         <>
-            <Button onClick={handleOpen} variant="contained">Add new Task</Button>
+            <Button onClick={handleOpen} sx={{ width: "200px", display: "inline-block" }} variant="contained">Add new Task</Button>
             <Modal
                 open={open}
                 onClose={handleClose}

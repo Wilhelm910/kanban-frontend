@@ -1,13 +1,19 @@
 export type TaskItem = {
     title: string
     description: string
-    user_info: Object
+    user: string
     created_at: string
     checked: boolean
     status: "todo" | "doing" | "review" | "done" | null
     id: string
+    user_info: user_info
   }
   
 export type TaskProps = {
     item: TaskItem
+  }
+
+  type user_info = {
+    id: string
+    username: string
   }

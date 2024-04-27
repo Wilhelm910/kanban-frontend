@@ -27,10 +27,10 @@ export default function Task({ item }: TaskProps) {
     p: 4,
   };
 
-  const { title, description, user, created_at} = item
+  const { title, description, user_info, created_at } = item
 
   return (
-    <Card sx={{ minWidth: 400 }}>
+    <Card sx={{ width: '100%', maxWidth: '100%', marginBottom: "4px" }}>
       <CardContent>
         <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
           {created_at}
@@ -43,8 +43,8 @@ export default function Task({ item }: TaskProps) {
         <Typography sx={{ mb: 1.5 }} color="text.secondary">
           {description}
         </Typography>
-        <Typography sx={{ fontSize: 12 }} color="text.secondary" gutterBottom>
-          {user}
+        <Typography bgcolor="lightgrey" p={1} borderRadius={2} sx={{ fontSize: 12, display: "inline-block" }} color="text.primary" gutterBottom>
+          {user_info.username.toUpperCase()}
         </Typography>
       </CardContent>
       <CardActions>

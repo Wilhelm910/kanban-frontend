@@ -30,7 +30,11 @@ const initialNewTask: TaskItem = {
     created_at: new Date().toISOString().split('T')[0],
     checked: false,
     status: null,
-    id: ""
+    id: "",
+    user_info: {
+        id: "",
+        username: ""
+    }
 }
 
 type AllUsersProps = {
@@ -58,19 +62,17 @@ export default function NewTask({ handleClose, item }: OpenProps) {
             [e.target.name]: e.target.value
         }))
     }
-  
+
     useEffect(() => {
         if (item) {
             setNewTask(item)
         }
-    },[])
-    console.log(newTask)
+    }, [])
 
     const URL = item ? `http://127.0.0.1:8000/updateTask/${item.id}/` : "http://127.0.0.1:8000/createTask/"
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        console.log(newTask)
         try {
             const response = await fetch(URL, {
                 method: `${item ? "PUT" : "POST"}`,
@@ -85,7 +87,6 @@ export default function NewTask({ handleClose, item }: OpenProps) {
                 console.log(item ? "Task erfolgreich aktualisiert" : "Task erfolgreich erstellt:", data);
                 setNewTask(initialNewTask)
                 handleClose()
-
             } else {
                 console.error(item ? "Fehler beim aktualisieren des Tasks" : "Fehler beim Erstellen des Tasks:", response.statusText);
                 console.log("Url", URL)
@@ -114,7 +115,6 @@ export default function NewTask({ handleClose, item }: OpenProps) {
         }
         loadAllUsers()
     }, [])
-    console.log(allUsers)
 
 
     return (
