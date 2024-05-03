@@ -1,8 +1,9 @@
-import { Box, Button, FormControl, InputLabel, MenuItem, Modal, Select, SelectChangeEvent, TextField, Typography } from '@mui/material'
+import { Box, Button, FormControl, InputLabel, MenuItem, Modal, Select, SelectChangeEvent, Typography } from '@mui/material'
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BoardsProps } from '../utils/types';
 import NewBoard from './NewBoard';
+import NewAccount from './NewAccount';
 
 
 type UserProps = {
@@ -13,18 +14,19 @@ const initialUser: UserProps = {
     username: ""
 }
 
-const initialBoard: BoardsProps = {
-    id: "",
-    name: ""
-}
+// const initialBoard: BoardsProps = {
+//     id: "",
+//     name: ""
+// }
 
 
 export default function Header() {
     const [user, setUser] = useState<UserProps>(initialUser)
     const navigate = useNavigate();
     const [boards, setBoards] = useState<BoardsProps[]>([])
-    const [newBoard, setNewBoard] = useState<BoardsProps>(initialBoard)
+    // const [newBoard, setNewBoard] = useState<BoardsProps>(initialBoard)
     let currentBoard = ""
+    const [selectedBoard, setSelectedBoard] = useState<string>("")
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
@@ -48,26 +50,29 @@ export default function Header() {
         navigate("/login")
     }
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        setNewBoard((prev) => ({
-            ...prev,
-            [e.target.name]: e.target.value
-        }))
-    }
+    // const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    //     setNewBoard((prev) => ({
+    //         ...prev,
+    //         [e.target.name]: e.target.value
+    //     }))
+    // }
 
 
-    const handleSubmit = () => {
+    // const handleSubmit = () => {
 
-    }
+    // }
 
 
     const handleSelect = (e: SelectChangeEvent) => {
-        console.log(e.target.value)
-        console.log(e.target.name)
-        console.log(e.target)
-        currentBoard = e.target.value
-        console.log(currentBoard)
-        navigate(`/board/${currentBoard}`)
+        // console.log(e.target.value)
+        // console.log(e.target.name)
+        // console.log(e.target)
+        // currentBoard = e.target.value
+        // console.log(currentBoard)
+        // navigate(`/board/${currentBoard}`)
+        const selectedValue = e.target.value as string;
+        setSelectedBoard(selectedValue);
+        navigate(`/board/${selectedValue}`);
     }
 
 
@@ -115,43 +120,73 @@ export default function Header() {
         }
         loadAllBoards()
 
-    }, [])
+    }, [localStorage.getItem("token")])
+
+
+    const renderLoggedInInfo = () => {
+        return (
+            <>
+                <Typography variant="h3" gutterBottom>
+                    Welcome on board, {user.username.toLocaleUpperCase()}
+                </Typography>
+                <Button onClick={handleOpen} variant="contained">Create New Board</Button>
+                <Modal
+                    open={open}
+                    onClose={handleClose}
+                    aria-labelledby="modal-modal-title"
+                    aria-describedby="modal-modal-description"
+                >
+                    <Box sx={style}>
+                        <NewBoard handleClose={handleClose} />
+                    </Box>
+                </Modal>
+                <Box sx={{ minWidth: 120 }}>
+                    <FormControl fullWidth>
+                        <InputLabel id="demo-simple-select-label">Boards</InputLabel>
+                        <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            value={selectedBoard}
+                            label="Boards"
+                            onChange={handleSelect}
+                        >
+                            {boards?.map((item) => (
+                                <MenuItem key={item.id} value={item.id}>{item.name}</MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+                </Box>
+                <Button onClick={handleLogout} sx={{ height: "fit-content" }} variant="contained">Logout</Button>
+            </>
+        )
+    }
+
+    const renderNotLoggedInInfo = () => {
+        return (
+            <>
+                <Box display="flex" alignItems="center">
+                    <Typography mr={2}>Create an Account and Join this Awesome Board</Typography>
+                    <Button onClick={handleOpen} sx={{ height: "fit-content" }} variant="contained">Join</Button>
+                    <Modal
+                        open={open}
+                        onClose={handleClose}
+                        aria-labelledby="modal-modal-title"
+                        aria-describedby="modal-modal-description"
+                    >
+                        <Box sx={style}>
+                            <NewAccount handleClose={handleClose} />
+                        </Box>
+                    </Modal>
+                </Box>
+            </>
+        )
+    }
 
 
     return (
-        <Box p={2} display="flex" justifyContent="space-around" >
-            <Typography variant="h3" gutterBottom>
-                Welcome on board, {user.username.toLocaleUpperCase()}
-            </Typography>
-            <Button onClick={handleOpen} variant="contained">Create New Board</Button>
-            <Modal
-                open={open}
-                onClose={handleClose}
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description"
-            >
-                <Box sx={style}>
-                    <NewBoard handleClose={handleClose} />
-                </Box>
-            </Modal>
-            <Box sx={{ minWidth: 120 }}>
-                <FormControl fullWidth>
-                    <InputLabel id="demo-simple-select-label">Boards</InputLabel>
-                    <Select
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
-                        value={currentBoard.name}
-                        label="Boards"
-                        onChange={handleSelect}
-                    >
-                        {boards?.map((item) => (
-                            <MenuItem key={item.id} value={item.id}>{item.name}</MenuItem>
-                        ))}
-                    </Select>
-                </FormControl>
-            </Box>
-            <Button onClick={handleLogout} sx={{ height: "fit-content" }} variant="contained">Logout</Button>
-        </Box>
+        <Box p={2} display="flex" justifyContent="space-around" height="100px" bgcolor="#F3EAE9">
+            {localStorage.getItem("token") ? renderLoggedInInfo() : renderNotLoggedInInfo()}
+        </Box >
 
     )
 }

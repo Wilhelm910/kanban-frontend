@@ -142,7 +142,7 @@ export default function NewTask({ handleClose, item }: OpenProps) {
     return (
         <>
             <form onSubmit={(e) => handleSubmit(e)}>
-                <Box sx={{ display: "flex", flexDirection: "column" }}>
+                <Box gap={2} sx={{ display: "flex", flexDirection: "column" }}>
                     <TextField onChange={(e) => handleChange(e)} value={newTask.title} name='title' id="outlined-basic" label="Title" variant="outlined" />
                     <TextField onChange={(e) => handleChange(e)} value={newTask.description} name='description' id="outlined-basic" label="Description" variant="outlined" multiline rows={4} />
                     <TextField onChange={(e) => handleChange(e)} value={newTask.user} name='user' id="outlined-basic" label="User" variant="outlined" select>

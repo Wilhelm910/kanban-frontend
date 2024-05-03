@@ -1,5 +1,5 @@
-import { Button, TextField } from "@mui/material";
-import { useState } from "react";
+import { Box, Button, TextField } from "@mui/material";
+import { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 
 type LoginData = {
@@ -16,8 +16,6 @@ const initialLoginData: LoginData = {
 export default function Login() {
   const [loginData, setLoginData] = useState<LoginData>(initialLoginData)
   const navigate = useNavigate();
-
-
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setLoginData(prev => ({
@@ -52,13 +50,23 @@ export default function Login() {
     }
   }
 
+  useEffect(() => {
+    if (localStorage.getItem("token")) {
+      console.log("test")
+      navigate("/board")
+    }
+  }, [])
+
+
   return (
-    <>
+    <Box sx={{ width: "100%", flex: "1", paddingTop: 10, display: "flex", flexDirection: "column", alignItems: "center" }}>
       <form onSubmit={(e) => handleSubmit(e)}>
-        <TextField onChange={(e) => handleChange(e)} name="username" value={loginData?.username || ""} id="outlined-basic" label="Username" type="text" variant="outlined" />
-        <TextField onChange={(e) => handleChange(e)} name="password" value={loginData?.password || ""} id="outlined-basic" label="Password" type="password" variant="outlined" />
-        <Button type="submit" variant="contained">Login</Button>
+        <Box display="flex" gap={2}>
+          <TextField onChange={(e) => handleChange(e)} name="username" value={loginData?.username || ""} id="outlined-basic" label="Username" type="text" variant="outlined" />
+          <TextField onChange={(e) => handleChange(e)} name="password" value={loginData?.password || ""} id="outlined-basic" label="Password" type="password" variant="outlined" />
+          <Button type="submit" variant="contained">Login</Button>
+        </Box>
       </form>
-    </>
+    </Box >
   )
 }
