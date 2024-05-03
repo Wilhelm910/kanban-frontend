@@ -1,6 +1,6 @@
 import { Box, Button, Modal, Typography } from "@mui/material";
 import { useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import NewTask from "./NewTask";
 import Task from "./Task";
 import { TaskItem } from "../utils/types";
@@ -19,6 +19,7 @@ export default function Board() {
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
     const navigate = useNavigate();
+    const params = useParams()
 
     const style = {
         position: 'absolute' as 'absolute',
@@ -65,9 +66,11 @@ export default function Board() {
             <Box sx={{ width: "100%", bgcolor, flex: "1", padding: 1, display: "flex", flexDirection: "column", alignItems: "center" }}>
                 <Typography>{children}</Typography>
                 {tasks.map((item) => {
-                    return (
-                        item.status == status && <Task key={item.id} item={item} />
-                    )
+                    if (item.board == params.id) {
+                        return (
+                            item.status == status && <Task key={item.id} item={item} />
+                        )
+                    }
                 })}
             </Box>
         )

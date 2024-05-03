@@ -7,6 +7,7 @@ export type TaskItem = {
     status: "todo" | "doing" | "review" | "done" | null
     id: string
     user_info: user_info
+    board: string
   }
   
 export type TaskProps = {
@@ -17,3 +18,8 @@ export type TaskProps = {
     id: string
     username: string
   }
+
+export type BoardsProps = {
+  id: string,
+  name: string
+}

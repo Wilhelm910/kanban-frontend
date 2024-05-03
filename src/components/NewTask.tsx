@@ -1,6 +1,6 @@
 import { Box, Button, MenuItem, TextField } from '@mui/material'
 import { useEffect, useState } from 'react'
-import { TaskItem } from '../utils/types'
+import { BoardsProps, TaskItem } from '../utils/types'
 
 
 const status = [
@@ -34,7 +34,8 @@ const initialNewTask: TaskItem = {
     user_info: {
         id: "",
         username: ""
-    }
+    },
+    board: ""
 }
 
 type AllUsersProps = {
@@ -55,6 +56,7 @@ type OpenProps = {
 export default function NewTask({ handleClose, item }: OpenProps) {
     const [newTask, setNewTask] = useState<TaskItem>(initialNewTask)
     const [allUsers, setAllUsers] = useState<AllUsersProps[]>(initialAllUsers)
+    const [boards, setBoards] = useState<BoardsProps[]>([])
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setNewTask(prev => ({
@@ -114,6 +116,26 @@ export default function NewTask({ handleClose, item }: OpenProps) {
             }
         }
         loadAllUsers()
+
+        const loadAllBoards = async () => {
+            try {
+                let response = await fetch("http://127.0.0.1:8000/allboard/", {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Token ${localStorage.getItem("token")}`
+                    }
+                })
+                if (response.ok) {
+                    let json = await response.json()
+                    setBoards(json)
+                    console.log("Loading successfull, Board: ", boards)
+                    console.log(json)
+                }
+            } catch (error) {
+                console.log("An error occured", error)
+            }
+        }
+        loadAllBoards()
     }, [])
 
 
@@ -131,6 +153,11 @@ export default function NewTask({ handleClose, item }: OpenProps) {
                     <TextField onChange={(e) => handleChange(e)} value={newTask.status || ""} name='status' id="outlined-basic" label="Status" variant="outlined" select>
                         {status.map((item) => (
                             <MenuItem key={item.value} value={item.value}>{item.label}</MenuItem>
+                        ))}
+                    </TextField>
+                    <TextField onChange={(e) => handleChange(e)} value={newTask.board || ""} name='board' id="outlined-basic" label="Board" variant="outlined" select>
+                        {boards.map((item) => (
+                            <MenuItem key={item.id} value={item.id}>{item.name}</MenuItem>
                         ))}
                     </TextField>
                     <Button type="submit" variant="contained">{item ? "Update Task" : "Create Task"}</Button>

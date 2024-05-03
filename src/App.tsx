@@ -15,7 +15,8 @@ function App() {
         <Routes>
           <Route path="/" element={<Navigate to="/login" />} />
           <Route path="/login" element={<Login />} />
-          <Route path='/board' element={<Board />} />
+          <Route path="/board/:id" element={<Board />} />
+          <Route path="/board/" element={<Board />} />
         </Routes>
         <div className='footer-container'>
           <Footer />
