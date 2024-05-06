@@ -33,8 +33,6 @@ export default function Board() {
         p: 4,
     };
 
-
-
     useEffect(() => {
         const loadTasks = async () => {
             try {
@@ -59,11 +57,11 @@ export default function Board() {
             }
         }
         loadTasks()
-    }, [])
+    }, [open])
 
     const StatusBox = ({ bgcolor, status, children }: StatusBoxProps) => {
         return (
-            <Box sx={{ width: "100%", bgcolor, flex: "1", padding: 1, display: "flex", flexDirection: "column", alignItems: "center" }}>
+            <Box borderRadius={2} sx={{ width: "100%", bgcolor, flex: "1", padding: 2, display: "flex", flexDirection: "column", alignItems: "center"}}>
                 <Typography>{children}</Typography>
                 {tasks.map((item) => {
                     if (item.board == params.id) {
@@ -79,23 +77,23 @@ export default function Board() {
 
     return (
         <>
-            <Button onClick={handleOpen} sx={{ width: "200px", display: "inline-block" }} variant="contained">Add new Task</Button>
-            <Modal
-                open={open}
-                onClose={handleClose}
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description"
-            >
-                <Box sx={style}>
-                    <NewTask handleClose={handleClose} />
+                <Button onClick={handleOpen} sx={{ width: "200px", display: "inline-block", margin: "4px", alignSelf: "center" }} variant="contained">Add new Task</Button>
+                <Modal
+                    open={open}
+                    onClose={handleClose}
+                    aria-labelledby="modal-modal-title"
+                    aria-describedby="modal-modal-description"
+                >
+                    <Box sx={style}>
+                        <NewTask handleClose={handleClose}/>
+                    </Box>
+                </Modal>
+                <Box gap={1} p={2} display="flex" justifyContent="space-around" width="100%">
+                    <StatusBox status="todo" bgcolor="#ebe6ec">To Do</StatusBox>
+                    <StatusBox status="doing" bgcolor="#d8cdd9">Doing</StatusBox>
+                    <StatusBox status="review" bgcolor="#c4b5c6">Review</StatusBox>
+                    <StatusBox status="done" bgcolor="#b19cb3">Done</StatusBox>
                 </Box>
-            </Modal>
-            <Box display="flex" justifyContent="space-around" width="100%">
-                <StatusBox status="todo" bgcolor="lightgreen">To Do</StatusBox>
-                <StatusBox status="doing" bgcolor="lightcyan">Doing</StatusBox>
-                <StatusBox status="review" bgcolor="lightcoral">Review</StatusBox>
-                <StatusBox status="done" bgcolor="lightpink">Done</StatusBox>
-            </Box>
         </>
     )
 }

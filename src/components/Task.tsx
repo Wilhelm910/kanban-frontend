@@ -7,6 +7,7 @@ import { Box, Modal } from '@mui/material';
 import NewTask from './NewTask';
 import { useState } from 'react';
 import { TaskProps } from '../utils/types';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 
 
@@ -26,6 +27,26 @@ export default function Task({ item }: TaskProps) {
     boxShadow: 24,
     p: 4,
   };
+
+
+  const handleDelete = async () => {
+    try {
+      const response = await fetch(`http://127.0.0.1:8000/updateTask/${item.id}/`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Token ${localStorage.getItem("token")}`
+        }
+      })
+      if (response.ok) {
+        console.log("Task successfull deleted")
+        window.location.reload();
+      }
+    } catch (error) {
+      console.log("An error ocured: ", error)
+    }
+  }
+
 
   const { title, description, user_info, created_at } = item
 
@@ -47,8 +68,9 @@ export default function Task({ item }: TaskProps) {
           {user_info.username.toUpperCase()}
         </Typography>
       </CardContent>
-      <CardActions>
+      <CardActions sx={{ display: "flex", justifyContent: "space-evenly" }}>
         <Button onClick={handleOpen} variant="contained">Update Task</Button>
+        <Button onClick={handleDelete}><DeleteIcon color='primary' fontSize='large' /></Button>
         <Modal
           open={open}
           onClose={handleClose}

@@ -25,7 +25,7 @@ export default function Header() {
     const navigate = useNavigate();
     const [boards, setBoards] = useState<BoardsProps[]>([])
     // const [newBoard, setNewBoard] = useState<BoardsProps>(initialBoard)
-    let currentBoard = ""
+    // let currentBoard = ""
     const [selectedBoard, setSelectedBoard] = useState<string>("")
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
@@ -112,7 +112,6 @@ export default function Header() {
                     let json = await response.json()
                     setBoards(json)
                     console.log("Loading successfull, Board: ", boards)
-                    console.log(json)
                 }
             } catch (error) {
                 console.log("An error occured", error)
@@ -120,16 +119,28 @@ export default function Header() {
         }
         loadAllBoards()
 
+
+        const loadCurrentBoard = () => {
+            const currentUrl = window.location.href;
+            const lastIndex = currentUrl.lastIndexOf('/');
+            const currentBoard = currentUrl.substring(lastIndex + 1);
+            if (currentBoard) {
+                setSelectedBoard(currentBoard)
+            }
+        }
+        loadCurrentBoard()
+
+
     }, [localStorage.getItem("token")])
 
 
     const renderLoggedInInfo = () => {
         return (
             <>
-                <Typography variant="h3" gutterBottom>
-                    Welcome on board, {user.username.toLocaleUpperCase()}
+                <Typography mb={0} variant="h3" gutterBottom>
+                    Welcome on board, {user.username.toUpperCase()}
                 </Typography>
-                <Button onClick={handleOpen} variant="contained">Create New Board</Button>
+                <Button sx={{marginRight: "4px"}} onClick={handleOpen} variant="contained">Create New Board</Button>
                 <Modal
                     open={open}
                     onClose={handleClose}
@@ -140,7 +151,7 @@ export default function Header() {
                         <NewBoard handleClose={handleClose} />
                     </Box>
                 </Modal>
-                <Box sx={{ minWidth: 120 }}>
+                <Box sx={{ minWidth: 120, marginRight: "4px" }}>
                     <FormControl fullWidth>
                         <InputLabel id="demo-simple-select-label">Boards</InputLabel>
                         <Select
@@ -184,7 +195,7 @@ export default function Header() {
 
 
     return (
-        <Box p={2} display="flex" justifyContent="space-around" height="100px" bgcolor="#F3EAE9">
+        <Box p={2} m={2} borderRadius={2} display="flex" justifyContent="space-around" alignItems="center" minHeight="100px" bgcolor="#f5f2f5">
             {localStorage.getItem("token") ? renderLoggedInInfo() : renderNotLoggedInInfo()}
         </Box >
 

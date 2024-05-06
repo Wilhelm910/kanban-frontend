@@ -53,7 +53,7 @@ type OpenProps = {
     item?: TaskItem
 }
 
-export default function NewTask({ handleClose, item }: OpenProps) {
+export default function NewTask({ handleClose, item}: OpenProps) {
     const [newTask, setNewTask] = useState<TaskItem>(initialNewTask)
     const [allUsers, setAllUsers] = useState<AllUsersProps[]>(initialAllUsers)
     const [boards, setBoards] = useState<BoardsProps[]>([])
@@ -89,6 +89,7 @@ export default function NewTask({ handleClose, item }: OpenProps) {
                 console.log(item ? "Task erfolgreich aktualisiert" : "Task erfolgreich erstellt:", data);
                 setNewTask(initialNewTask)
                 handleClose()
+                window.location.reload();
             } else {
                 console.error(item ? "Fehler beim aktualisieren des Tasks" : "Fehler beim Erstellen des Tasks:", response.statusText);
                 console.log("Url", URL)
@@ -120,6 +121,7 @@ export default function NewTask({ handleClose, item }: OpenProps) {
         const loadAllBoards = async () => {
             try {
                 let response = await fetch("http://127.0.0.1:8000/allboard/", {
+                    method: "GET",
                     headers: {
                         "Content-Type": "application/json",
                         "Authorization": `Token ${localStorage.getItem("token")}`
@@ -129,7 +131,6 @@ export default function NewTask({ handleClose, item }: OpenProps) {
                     let json = await response.json()
                     setBoards(json)
                     console.log("Loading successfull, Board: ", boards)
-                    console.log(json)
                 }
             } catch (error) {
                 console.log("An error occured", error)

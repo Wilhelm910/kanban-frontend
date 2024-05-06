@@ -70,7 +70,7 @@ export default function NewAccount({ handleClose }: NewAccountProps) {
 
     return (
         <form onSubmit={(e) => handleSubmit(e)}>
-            <Box display="flex" gap={2}>
+            <Box display="flex" flexDirection="column" gap={2}>
                 <TextField onChange={(e) => handleChange(e)} name="username" value={newUser.username || ""} id="outlined-basic" label="Name" type="text" variant="outlined" />
                 <TextField onChange={(e) => handleChange(e)} name="password" value={newUser.password || ""} id="outlined-basic" label="Password" type="password" variant="outlined" />
                 <TextField onChange={(e) => handleChange(e)} name="confirmPassword" value={confirmPassword || ""} id="outlined-basic" label="Confirm Password" type="password" variant="outlined" />
