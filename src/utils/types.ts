@@ -12,6 +12,8 @@ export type TaskItem = {
   
 export type TaskProps = {
     item: TaskItem
+    tasks: TaskItem[]
+    setTasks: (tasks: TaskItem[]) => void
   }
 
   type user_info = {
@@ -22,4 +24,11 @@ export type TaskProps = {
 export type BoardsProps = {
   id: string,
   name: string
+}
+
+export type OpenProps = {
+  handleClose: () => void
+  item?: TaskItem
+  tasks?: TaskItem[]
+  setTasks?: (tasks: TaskItem[]) => void
 }

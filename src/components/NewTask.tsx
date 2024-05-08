@@ -1,6 +1,6 @@
 import { Box, Button, MenuItem, TextField } from '@mui/material'
 import { useEffect, useState } from 'react'
-import { BoardsProps, TaskItem } from '../utils/types'
+import { BoardsProps, OpenProps, TaskItem } from '../utils/types'
 
 
 const status = [
@@ -48,15 +48,13 @@ const initialAllUsers: AllUsersProps[] = [{
     username: ""
 }]
 
-type OpenProps = {
-    handleClose: () => void
-    item?: TaskItem
-}
 
-export default function NewTask({ handleClose, item}: OpenProps) {
+
+export default function NewTask({ handleClose, item, tasks, setTasks }: OpenProps) {
     const [newTask, setNewTask] = useState<TaskItem>(initialNewTask)
     const [allUsers, setAllUsers] = useState<AllUsersProps[]>(initialAllUsers)
     const [boards, setBoards] = useState<BoardsProps[]>([])
+    const updatedTasks: TaskItem[] = []
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setNewTask(prev => ({
@@ -70,6 +68,7 @@ export default function NewTask({ handleClose, item}: OpenProps) {
             setNewTask(item)
         }
     }, [])
+
 
     const URL = item ? `http://127.0.0.1:8000/updateTask/${item.id}/` : "http://127.0.0.1:8000/createTask/"
 
@@ -87,15 +86,24 @@ export default function NewTask({ handleClose, item}: OpenProps) {
             if (response.ok) {
                 const data = await response.json();
                 console.log(item ? "Task erfolgreich aktualisiert" : "Task erfolgreich erstellt:", data);
+                if (item && tasks && setTasks) {
+                    tasks.map((task) => {
+                        if (task.id != item.id) {
+                            updatedTasks.push(task)
+                        } else {
+                            updatedTasks.push(data)
+                        }
+                        setTasks(updatedTasks)
+                    })
+                }
                 setNewTask(initialNewTask)
                 handleClose()
-                window.location.reload();
             } else {
                 console.error(item ? "Fehler beim aktualisieren des Tasks" : "Fehler beim Erstellen des Tasks:", response.statusText);
                 console.log("Url", URL)
             }
         } catch (error) {
-            console.log("error")
+            console.log("error", error)
         }
     }
 

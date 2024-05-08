@@ -6,15 +6,15 @@ import Typography from '@mui/material/Typography';
 import { Box, Modal } from '@mui/material';
 import NewTask from './NewTask';
 import { useState } from 'react';
-import { TaskProps } from '../utils/types';
+import { TaskItem, TaskProps } from '../utils/types';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 
-
-export default function Task({ item }: TaskProps) {
+export default function Task({ item, tasks, setTasks }: TaskProps) {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const updatedTasks: TaskItem[] = []
 
   const style = {
     position: 'absolute' as 'absolute',
@@ -28,7 +28,6 @@ export default function Task({ item }: TaskProps) {
     p: 4,
   };
 
-
   const handleDelete = async () => {
     try {
       const response = await fetch(`http://127.0.0.1:8000/updateTask/${item.id}/`, {
@@ -40,12 +39,26 @@ export default function Task({ item }: TaskProps) {
       })
       if (response.ok) {
         console.log("Task successfull deleted")
-        window.location.reload();
+        tasks.map((task) => {
+          if (item.id != task.id) {
+            updatedTasks.push(task)
+            setTasks(updatedTasks)
+          }
+        })
       }
     } catch (error) {
       console.log("An error ocured: ", error)
     }
   }
+
+  // const updateTasks = async () => {
+  //   const token = localStorage.getItem("token")
+  //   if (token) {
+  //     console.log("test")
+  //     const fetchedTasks = await fetchTasks(token)
+  //     setTasks(fetchedTasks)
+  //   }
+  // }
 
 
   const { title, description, user_info, created_at } = item
@@ -78,7 +91,7 @@ export default function Task({ item }: TaskProps) {
           aria-describedby="modal-modal-description"
         >
           <Box sx={style}>
-            <NewTask handleClose={handleClose} item={item} />
+            <NewTask handleClose={handleClose} item={item} tasks={tasks} setTasks={setTasks} />
           </Box>
         </Modal>
       </CardActions>
