@@ -56,7 +56,7 @@ export default function NewAccount({ handleClose }: NewAccountProps) {
                 setNewUser(initialNewUser)
                 setConfirmPassword("")
             } else {
-                console.error("Fehler beim Erstellen des Tasks:", response.statusText);
+                console.error("Fehler beim Erstellen des Users:", response.statusText);
             }
 
         }
