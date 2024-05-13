@@ -63,7 +63,6 @@ export default function Header() {
             if (response.ok) {
                 let json = await response.json()
                 setBoards(json)
-                console.log("Loading successfull, Board: ", boards)
             }
         } catch (error) {
             console.log("An error occured", error)
@@ -82,7 +81,6 @@ export default function Header() {
             if (response.ok) {
                 let json = await response.json()
                 setUser(json)
-                console.log("User loading was successfull", user)
             } else {
                 console.error("Data loading failed")
             }
@@ -105,8 +103,18 @@ export default function Header() {
     useEffect(() => {
         loadCurrentUser()
         loadAllBoards()
+        loadDefaultBoard()
         loadCurrentBoard()
     }, [localStorage.getItem("token")])
+
+    const loadDefaultBoard = () => {
+            const defaultBoard = boards.find(board => board.name === "Default")
+            if (defaultBoard) {
+                setSelectedBoard(defaultBoard.id)
+                navigate(`/board/${defaultBoard.id}`);
+            }
+    }
+
 
 
     const renderLoggedInInfo = () => {

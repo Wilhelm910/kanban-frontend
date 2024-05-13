@@ -1,6 +1,7 @@
 import { Box, Button, MenuItem, TextField } from '@mui/material'
 import { useEffect, useState } from 'react'
 import { BoardsProps, OpenProps, TaskItem } from '../utils/types'
+import { useParams } from "react-router-dom";
 
 
 const status = [
@@ -55,6 +56,7 @@ export default function NewTask({ handleClose, item, tasks, setTasks }: OpenProp
     const [allUsers, setAllUsers] = useState<AllUsersProps[]>(initialAllUsers)
     const [boards, setBoards] = useState<BoardsProps[]>([])
     const updatedTasks: TaskItem[] = []
+    const params = useParams()
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setNewTask(prev => ({
@@ -74,6 +76,14 @@ export default function NewTask({ handleClose, item, tasks, setTasks }: OpenProp
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
+        console.log(newTask)
+        if (!newTask.board) {
+            setNewTask(prev => ({
+                ...prev,
+                board: params.id
+            }))
+        }
+        console.log(newTask)
         try {
             const response = await fetch(URL, {
                 method: `${item ? "PUT" : "POST"}`,
@@ -85,7 +95,6 @@ export default function NewTask({ handleClose, item, tasks, setTasks }: OpenProp
             })
             if (response.ok) {
                 const data = await response.json();
-                console.log(item ? "Task erfolgreich aktualisiert" : "Task erfolgreich erstellt:", data);
                 if (item && tasks && setTasks) {
                     tasks.map((task) => {
                         if (task.id != item.id) {
@@ -100,7 +109,6 @@ export default function NewTask({ handleClose, item, tasks, setTasks }: OpenProp
                 handleClose()
             } else {
                 console.error(item ? "Fehler beim aktualisieren des Tasks" : "Fehler beim Erstellen des Tasks:", response.statusText);
-                console.log("Url", URL)
             }
         } catch (error) {
             console.log("error", error)
@@ -138,7 +146,6 @@ export default function NewTask({ handleClose, item, tasks, setTasks }: OpenProp
                 if (response.ok) {
                     let json = await response.json()
                     setBoards(json)
-                    console.log("Loading successfull, Board: ", boards)
                 }
             } catch (error) {
                 console.log("An error occured", error)
@@ -164,7 +171,7 @@ export default function NewTask({ handleClose, item, tasks, setTasks }: OpenProp
                             <MenuItem key={item.value} value={item.value}>{item.label}</MenuItem>
                         ))}
                     </TextField>
-                    <TextField onChange={(e) => handleChange(e)} value={newTask.board || ""} name='board' id="outlined-basic" label="Board" variant="outlined" select>
+                    <TextField onChange={(e) => handleChange(e)} value={newTask.board || params.id} name='board' id="outlined-basic" label="Board" variant="outlined" select>
                         {boards.map((item) => (
                             <MenuItem key={item.id} value={item.id}>{item.name}</MenuItem>
                         ))}

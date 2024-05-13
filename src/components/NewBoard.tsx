@@ -38,8 +38,7 @@ export default function NewBoard({ handleClose, loadAllBoards }: Props) {
         body: JSON.stringify(newBoard)
       })
       if (response.ok) {
-        const data = await response.json()
-        console.log("New Board created: ", data)
+        // const data = await response.json()
         setNewBoard(initialNewBoard)
         loadAllBoards()
       } else {

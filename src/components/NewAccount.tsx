@@ -53,8 +53,7 @@ export default function NewAccount({ handleClose, notify }: NewAccountProps) {
                 body: JSON.stringify(newUser)
             })
             if (response.ok) {
-                const data = await response.json()
-                console.log("New User created: ", data)
+                // const data = await response.json()
                 setNewUser(initialNewUser)
                 setConfirmPassword("")
                 notify()

@@ -41,7 +41,6 @@ export default function Login() {
       localStorage.setItem("token", json.token)
       console.log(json)
       if (response.ok) {
-        console.log("Login successfull")
         navigate("/board")
       } else {
         console.error("Login failed")
@@ -53,7 +52,6 @@ export default function Login() {
 
   useEffect(() => {
     if (localStorage.getItem("token")) {
-      console.log("test")
       navigate("/board")
     }
   }, [])

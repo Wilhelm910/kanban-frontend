@@ -46,28 +46,6 @@ export default function Board() {
     }
 
     useEffect(() => {
-        // const loadTasks = async () => {
-        //     try {
-        //         const response = await fetch(`http://127.0.0.1:8000/board/`, {
-        //             method: "GET",
-        //             headers: {
-        //                 "Content-Type": "application/json",
-        //                 "Authorization": `Token ${localStorage.getItem("token")}`
-        //             }
-        //         })
-        //         let json = await response.json()
-        //         setTasks(json)
-        //         if (response.ok) {
-        //             console.log("Data loading was successfull")
-        //         } else if (response.status == 401) {
-        //             navigate("/login")
-        //         } else {
-        //             console.error("Data loading failed")
-        //         }
-        //     } catch (error) {
-        //         console.error("An error occured", error)
-        //     }
-        // }
         loadTasks()
     }, [open, navigate])
 
@@ -75,7 +53,7 @@ export default function Board() {
     const StatusBox = ({ bgcolor, status, children }: StatusBoxProps) => {
         return (
             <Box borderRadius={2} sx={{ width: "100%", bgcolor, flex: "1", padding: 2, display: "flex", flexDirection: "column", alignItems: "center" }}>
-                <Typography>{children}</Typography>
+                <Typography variant="h6" sx={{marginBottom: "8px"}}>{children}</Typography>
                 {tasks.map((item) => {
                     if (item.board == params.id) {
                         return (

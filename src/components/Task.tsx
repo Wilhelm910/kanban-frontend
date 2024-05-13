@@ -38,7 +38,6 @@ export default function Task({ item, tasks, setTasks }: TaskProps) {
         }
       })
       if (response.ok) {
-        console.log("Task successfull deleted")
         tasks.map((task) => {
           if (item.id != task.id) {
             updatedTasks.push(task)
@@ -50,15 +49,6 @@ export default function Task({ item, tasks, setTasks }: TaskProps) {
       console.log("An error ocured: ", error)
     }
   }
-
-  // const updateTasks = async () => {
-  //   const token = localStorage.getItem("token")
-  //   if (token) {
-  //     console.log("test")
-  //     const fetchedTasks = await fetchTasks(token)
-  //     setTasks(fetchedTasks)
-  //   }
-  // }
 
 
   const { title, description, user_info, created_at } = item
