@@ -2,8 +2,10 @@ import { Box, Button, TextField } from '@mui/material'
 import React, { useState } from 'react'
 
 
+
 type NewAccountProps = {
     handleClose: () => void
+    notify: () => void
 }
 
 
@@ -19,7 +21,7 @@ const initialNewUser = {
 
 
 
-export default function NewAccount({ handleClose }: NewAccountProps) {
+export default function NewAccount({ handleClose, notify }: NewAccountProps) {
     const [newUser, setNewUser] = useState<NewUserProps>(initialNewUser)
     const [confirmPassword, setConfirmPassword] = useState<string>("")
 
@@ -55,6 +57,8 @@ export default function NewAccount({ handleClose }: NewAccountProps) {
                 console.log("New User created: ", data)
                 setNewUser(initialNewUser)
                 setConfirmPassword("")
+                notify()
+
             } else {
                 console.error("Fehler beim Erstellen des Users:", response.statusText);
             }

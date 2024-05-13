@@ -2,6 +2,7 @@ import { Box, Button, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 
+
 type LoginData = {
   username: string
   password: string
