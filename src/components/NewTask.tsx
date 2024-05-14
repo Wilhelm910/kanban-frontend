@@ -72,18 +72,15 @@ export default function NewTask({ handleClose, item, tasks, setTasks }: OpenProp
     }, [])
 
 
-    const URL = item ? `http://127.0.0.1:8000/updateTask/${item.id}/` : "http://127.0.0.1:8000/createTask/"
+    const URL = item ? `http://127.0.0.1:8000/updateTask/${item.id}/` : "http://127.0.0.1:8000/tasks/"
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
+        const updatedTask = { ...newTask }
         console.log(newTask)
-        if (!newTask.board) {
-            setNewTask(prev => ({
-                ...prev,
-                board: params.id
-            }))
+        if (!updatedTask.board && params.id) {
+            updatedTask.board = params.id as string
         }
-        console.log(newTask)
         try {
             const response = await fetch(URL, {
                 method: `${item ? "PUT" : "POST"}`,
@@ -91,7 +88,7 @@ export default function NewTask({ handleClose, item, tasks, setTasks }: OpenProp
                     "Content-Type": "application/json",
                     "Authorization": `Token ${localStorage.getItem("token")}`
                 },
-                body: JSON.stringify(newTask)
+                body: JSON.stringify(updatedTask)
             })
             if (response.ok) {
                 const data = await response.json();
@@ -136,7 +133,7 @@ export default function NewTask({ handleClose, item, tasks, setTasks }: OpenProp
 
         const loadAllBoards = async () => {
             try {
-                let response = await fetch("http://127.0.0.1:8000/allboard/", {
+                let response = await fetch("http://127.0.0.1:8000/boards/", {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",

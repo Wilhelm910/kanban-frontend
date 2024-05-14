@@ -54,7 +54,7 @@ export default function Header() {
 
     const loadAllBoards = async () => {
         try {
-            let response = await fetch("http://127.0.0.1:8000/allboard/", {
+            let response = await fetch("http://127.0.0.1:8000/boards/", {
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": `Token ${localStorage.getItem("token")}`

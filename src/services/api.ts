@@ -1,6 +1,6 @@
 export const fetchTasks = async (token: string) => {
     try {
-        const response = await fetch(`http://127.0.0.1:8000/board/`, {
+        const response = await fetch(`http://127.0.0.1:8000/tasks/`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
