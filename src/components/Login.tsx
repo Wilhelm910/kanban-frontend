@@ -28,7 +28,6 @@ export default function Login() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     console.log("Submitted data:", loginData);
-
     try {
       const response = await fetch(`http://127.0.0.1:8000/login/`, {
         method: "POST",
@@ -38,10 +37,9 @@ export default function Login() {
         body: JSON.stringify(loginData)
       })
       let json = await response.json()
-      localStorage.setItem("token", json.token)
-      console.log(json)
       if (response.ok) {
         navigate("/board")
+        localStorage.setItem("token", json.token)
       } else {
         console.error("Login failed")
       }

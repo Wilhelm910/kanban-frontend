@@ -71,7 +71,7 @@ export default function Header() {
 
     const loadCurrentUser = async () => {
         try {
-            let response = await fetch("http://127.0.0.1:8000/getCurrentUser/", {
+            let response = await fetch("http://127.0.0.1:8000/users/current/", {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -103,18 +103,21 @@ export default function Header() {
     useEffect(() => {
         loadCurrentUser()
         loadAllBoards()
-        loadDefaultBoard()
+
         loadCurrentBoard()
     }, [localStorage.getItem("token")])
 
-    const loadDefaultBoard = () => {
+    
+    useEffect(() => {
+        const loadDefaultBoard = () => {
             const defaultBoard = boards.find(board => board.name === "Default")
             if (defaultBoard) {
                 setSelectedBoard(defaultBoard.id)
                 navigate(`/board/${defaultBoard.id}`);
             }
-    }
-
+        }
+        loadDefaultBoard()
+    }, [boards])
 
 
     const renderLoggedInInfo = () => {

@@ -77,7 +77,6 @@ export default function NewTask({ handleClose, item, tasks, setTasks }: OpenProp
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         const updatedTask = { ...newTask }
-        console.log(newTask)
         if (!updatedTask.board && params.id) {
             updatedTask.board = params.id as string
         }
@@ -116,7 +115,7 @@ export default function NewTask({ handleClose, item, tasks, setTasks }: OpenProp
     useEffect(() => {
         const loadAllUsers = async () => {
             try {
-                const response = await fetch(`http://127.0.0.1:8000/userlist/`, {
+                const response = await fetch(`http://127.0.0.1:8000/users/`, {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",
