@@ -24,7 +24,7 @@ export default function Header() {
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
-    const notify = () => toast("Account created!");
+    const notify = (message:string) => toast(message);
 
     const style = {
         position: 'absolute' as 'absolute',
@@ -101,10 +101,11 @@ export default function Header() {
 
 
     useEffect(() => {
-        loadCurrentUser()
-        loadAllBoards()
-
-        loadCurrentBoard()
+        if(localStorage.getItem("token")){
+            loadCurrentUser()
+            loadAllBoards()
+            loadCurrentBoard()
+        }
     }, [localStorage.getItem("token")])
 
     
@@ -124,7 +125,7 @@ export default function Header() {
         return (
             <>
                 <Typography mb={0} variant="h3" gutterBottom>
-                    Welcome on board, {user.username.toUpperCase()}
+                    Welcome on board, {user.username.slice(0,1).toUpperCase() + user.username.slice(1,-1).toLowerCase()}
                 </Typography>
                 <Button sx={{ marginRight: "4px" }} onClick={handleOpen} variant="contained">Create New Board</Button>
                 <Modal

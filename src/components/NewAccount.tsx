@@ -2,20 +2,23 @@ import { Box, Button, TextField } from '@mui/material'
 import React, { useState } from 'react'
 
 
-
 type NewAccountProps = {
     handleClose: () => void
-    notify: () => void
+    notify: (message: string) => void
 }
 
 
 type NewUserProps = {
     username: string
+    // first_name: string
+    // last_name: string
     password: string
 }
 
 const initialNewUser = {
     username: "",
+    // first_name: "",
+    // last_name: "",
     password: ""
 }
 
@@ -39,7 +42,7 @@ export default function NewAccount({ handleClose, notify }: NewAccountProps) {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         if (newUser.password && newUser.password !== confirmPassword) {
-            console.log("Passwords do not match");
+            notify("Passwords do not match");
             setNewUser(initialNewUser)
             setConfirmPassword("")
             return;
@@ -56,10 +59,15 @@ export default function NewAccount({ handleClose, notify }: NewAccountProps) {
                 // const data = await response.json()
                 setNewUser(initialNewUser)
                 setConfirmPassword("")
-                notify()
+                notify("Account created!")
 
             } else {
-                console.error("Fehler beim Erstellen des Users:", response.statusText);
+                const errorResponse = await response.json();
+                if (errorResponse.username) {
+                    notify(errorResponse.username[0]);
+                } else {
+                    notify(`Fehler beim Erstellen des Users: ${response.statusText}`);
+                }
             }
 
         }
@@ -74,7 +82,9 @@ export default function NewAccount({ handleClose, notify }: NewAccountProps) {
     return (
         <form onSubmit={(e) => handleSubmit(e)}>
             <Box display="flex" flexDirection="column" gap={2}>
-                <TextField onChange={(e) => handleChange(e)} name="username" value={newUser.username || ""} id="outlined-basic" label="Name" type="text" variant="outlined" />
+                <TextField onChange={(e) => handleChange(e)} name="username" value={newUser.username || ""} id="outlined-basic" label="Username" type="text" variant="outlined" />
+                {/* <TextField onChange={(e) => handleChange(e)} name="first_name" value={newUser.first_name || ""} id="outlined-basic" label="First Name" type="text" variant="outlined" />
+                <TextField onChange={(e) => handleChange(e)} name="last_name" value={newUser.last_name || ""} id="outlined-basic" label="Last Name" type="text" variant="outlined" /> */}
                 <TextField onChange={(e) => handleChange(e)} name="password" value={newUser.password || ""} id="outlined-basic" label="Password" type="password" variant="outlined" />
                 <TextField onChange={(e) => handleChange(e)} name="confirmPassword" value={confirmPassword || ""} id="outlined-basic" label="Confirm Password" type="password" variant="outlined" />
                 <Button type="submit" variant="contained">Create</Button>
