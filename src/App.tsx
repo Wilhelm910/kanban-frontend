@@ -7,6 +7,9 @@ import Login from './components/Login'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { Navigate } from "react-router-dom";
 import { createTheme, ThemeProvider } from '@mui/material';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 
 const theme = createTheme({
@@ -18,20 +21,22 @@ const theme = createTheme({
 })
 
 function App() {
+  const notify = (message: string) => toast(message);
   return (
     <ThemeProvider theme={theme}>
       <Router>
         <div className='main-container'>
-          <Header />
+          <Header notify={notify} />
           <Routes>
             <Route path="/" element={<Navigate to="/login" />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/board/:id" element={<Board />} />
-            <Route path="/board/" element={<Board />} />
+            <Route path="/login" element={<Login notify={notify} />} />
+            <Route path="/board/:id" element={<Board notify={notify} />} />
+            <Route path="/board/" element={<Board notify={notify} />} />
           </Routes>
           <div className='footer-container'>
             <Footer />
           </div>
+          <ToastContainer />
         </div>
       </Router>
     </ThemeProvider>

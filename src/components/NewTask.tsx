@@ -51,7 +51,7 @@ const initialAllUsers: AllUsersProps[] = [{
 
 
 
-export default function NewTask({ handleClose, item, tasks, setTasks }: OpenProps) {
+export default function NewTask({ handleClose, item, tasks, setTasks, notify }: OpenProps) {
     const [newTask, setNewTask] = useState<TaskItem>(initialNewTask)
     const [allUsers, setAllUsers] = useState<AllUsersProps[]>(initialAllUsers)
     const [boards, setBoards] = useState<BoardsProps[]>([])
@@ -104,7 +104,12 @@ export default function NewTask({ handleClose, item, tasks, setTasks }: OpenProp
                 setNewTask(initialNewTask)
                 handleClose()
             } else {
-                console.error(item ? "Fehler beim aktualisieren des Tasks" : "Fehler beim Erstellen des Tasks:", response.statusText);
+                if (notify) {
+                    notify(item ? "Fehler beim aktualisieren des Tasks" : `Fehler beim Erstellen des Tasks: ${response.statusText}`);
+                } else {
+                    console.log(item ? "Fehler beim aktualisieren des Tasks" : `Fehler beim Erstellen des Tasks: ${response.statusText}`);
+                }
+
             }
         } catch (error) {
             console.log("error", error)

@@ -4,8 +4,6 @@ import { useNavigate } from 'react-router-dom';
 import { BoardsProps } from '../utils/types';
 import NewBoard from './NewBoard';
 import NewAccount from './NewAccount';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 
 type UserProps = {
     username: string
@@ -15,8 +13,12 @@ const initialUser: UserProps = {
     username: ""
 }
 
+type ToastProps = {
+    notify: (message: string) => void
+  }
 
-export default function Header() {
+
+export default function Header({ notify }: ToastProps) {
     const [user, setUser] = useState<UserProps>(initialUser)
     const navigate = useNavigate();
     const [boards, setBoards] = useState<BoardsProps[]>([])
@@ -24,7 +26,7 @@ export default function Header() {
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
-    const notify = (message:string) => toast(message);
+
 
     const style = {
         position: 'absolute' as 'absolute',
@@ -101,14 +103,14 @@ export default function Header() {
 
 
     useEffect(() => {
-        if(localStorage.getItem("token")){
+        if (localStorage.getItem("token")) {
             loadCurrentUser()
             loadAllBoards()
             loadCurrentBoard()
         }
     }, [localStorage.getItem("token")])
 
-    
+
     useEffect(() => {
         const loadDefaultBoard = () => {
             const defaultBoard = boards.find(board => board.name === "Default")
@@ -125,7 +127,7 @@ export default function Header() {
         return (
             <>
                 <Typography mb={0} variant="h3" gutterBottom>
-                    Welcome on board, {user.username.slice(0,1).toUpperCase() + user.username.slice(1,-1).toLowerCase()}
+                    Welcome on board, {user.username.slice(0, 1).toUpperCase() + user.username.slice(1, -1).toLowerCase()}
                 </Typography>
                 <Button sx={{ marginRight: "4px" }} onClick={handleOpen} variant="contained">Create New Board</Button>
                 <Modal
@@ -135,7 +137,7 @@ export default function Header() {
                     aria-describedby="modal-modal-description"
                 >
                     <Box sx={style}>
-                        <NewBoard loadAllBoards={loadAllBoards} handleClose={handleClose} />
+                        <NewBoard notify={notify} loadAllBoards={loadAllBoards} handleClose={handleClose} />
                     </Box>
                 </Modal>
                 <Box sx={{ minWidth: 120, marginRight: "4px" }}>
@@ -175,7 +177,6 @@ export default function Header() {
                             <NewAccount notify={notify} handleClose={handleClose} />
                         </Box>
                     </Modal>
-                    <ToastContainer />
                 </Box>
             </>
         )

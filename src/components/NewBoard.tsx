@@ -12,10 +12,11 @@ const initialNewBoard = {
 type Props = {
   handleClose: () => void
   loadAllBoards: () => void
+  notify: (message: string) => void
 }
 
 
-export default function NewBoard({ handleClose, loadAllBoards }: Props) {
+export default function NewBoard({ handleClose, loadAllBoards, notify }: Props) {
   const [newBoard, setNewBoard] = useState<NewBoardProps>(initialNewBoard)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -42,7 +43,7 @@ export default function NewBoard({ handleClose, loadAllBoards }: Props) {
         setNewBoard(initialNewBoard)
         loadAllBoards()
       } else {
-        console.error("Fehler beim Erstellen des Tasks:", response.statusText);
+        notify(`Fehler beim Erstellen des Boards: ${response.statusText}`);
       }
     } catch (error) {
       console.log("An error occured: ", error)

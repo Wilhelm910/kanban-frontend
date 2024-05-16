@@ -12,8 +12,13 @@ type StatusBoxProps = {
     children: React.ReactNode;
 }
 
+type ToastProps = {
+    notify: (message: string) => void
+}
 
-export default function Board() {
+
+
+export default function Board({ notify }: ToastProps) {
 
     const [tasks, setTasks] = useState<TaskItem[]>([])
     const [open, setOpen] = useState(false);
@@ -53,7 +58,7 @@ export default function Board() {
     const StatusBox = ({ bgcolor, status, children }: StatusBoxProps) => {
         return (
             <Box borderRadius={2} sx={{ width: "100%", bgcolor, flex: "1", padding: 2, display: "flex", flexDirection: "column", alignItems: "center" }}>
-                <Typography variant="h6" sx={{marginBottom: "8px"}}>{children}</Typography>
+                <Typography variant="h6" sx={{ marginBottom: "8px" }}>{children}</Typography>
                 {tasks.map((item) => {
                     if (item.board == params.id) {
                         return (
@@ -76,7 +81,7 @@ export default function Board() {
                 aria-describedby="modal-modal-description"
             >
                 <Box sx={style}>
-                    <NewTask handleClose={handleClose} />
+                    <NewTask notify={notify} handleClose={handleClose} />
                 </Box>
             </Modal>
             <Box gap={1} p={2} display="flex" justifyContent="space-around" width="100%">

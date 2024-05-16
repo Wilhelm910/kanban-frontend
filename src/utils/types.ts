@@ -31,4 +31,5 @@ export type OpenProps = {
   item?: TaskItem
   tasks?: TaskItem[]
   setTasks?: (tasks: TaskItem[]) => void
+  notify?: (message:string) => void
 }

@@ -13,7 +13,12 @@ const initialLoginData: LoginData = {
 }
 
 
-export default function Login() {
+type ToastProps = {
+  notify: (message: string) => void
+}
+
+
+export default function Login({ notify }: ToastProps) {
   const [loginData, setLoginData] = useState<LoginData>(initialLoginData)
   const navigate = useNavigate();
 
@@ -40,7 +45,7 @@ export default function Login() {
         navigate("/board")
         localStorage.setItem("token", json.token)
       } else {
-        console.error("Login failed")
+        notify("Login failed")
       }
     } catch (error) {
       console.error("An error occured", error)
